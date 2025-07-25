@@ -1,23 +1,27 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WorkboxPlugin = require("workbox-webpack-plugin");
-const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const WorkboxPlugin = require("workbox-webpack-plugin");
 
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const dependencies = require("./package.json").dependencies;
 
 module.exports = {
   entry: "./src/index.js",
-  mode: "development",
   output: {
-    publicPath: 'https://cleanui0011.github.io/mf-shell/',
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
+    path: path.resolve(__dirname, "dist"),
+    filename: "main.js",
+    clean: true
+  },
+  resolve: {
+    extensions: [".js", ".jsx"], // so imports can omit extensions
   },
   devServer: {
     port: 3004,
     liveReload: true,
     historyApiFallback: true,
+    // server: 'https'
   },
   module: {
     rules: [
@@ -34,45 +38,46 @@ module.exports = {
       },
     ],
   },
-  name: "shell",
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "index.html",
     }),
     new MiniCssExtractPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "public/manifest.json", to: "manifest.json" },
+        { from: "public/icons", to: "mf-shell/icons" }, // optional: copy icons folder
+      ],
+    }),
     new ModuleFederationPlugin({
       name: "shell",
       filename: "remoteEntry.js",
       remotes: {
-          LoginPage: "loginPage@https://cleanui0011.github.io/mf-login-page/remoteEntry.js",
-          // LeftNav: "leftNavigation@https://cleanui0011.github.io/mf-left-nav/remoteEntry.js",
-          TopNav: "topNavigation@https://cleanui0011.github.io/mf-top-nav/remoteEntry.js",
-          ItemDetails: "itemDetails@https://cleanui0011.github.io/mf-item-details/remoteEntry.js",
-          Shell: "shell@https://cleanui0011.github.io/mf-shell/remoteEntry.js",
-          SharedModules: "sharedModules@https://cleanui0011.github.io/mf-shared-modules/remoteEntry.js",
+        LoginPage:
+          "loginPage@https://cleanui0011.github.io/mf-login-page/remoteEntry.js",
+        // LeftNav: "leftNavigation@https://cleanui0011.github.io/mf-left-nav/remoteEntry.js",
+        TopNav:
+          "topNavigation@https://cleanui0011.github.io/mf-top-nav/remoteEntry.js",
+        ItemDetails:
+          "itemDetails@https://cleanui0011.github.io/mf-item-details/remoteEntry.js",
+        Shell: "shell@https://cleanui0011.github.io/mf-shell/remoteEntry.js",
+        SharedModules:
+          "sharedModules@https://cleanui0011.github.io/mf-shared-modules/remoteEntry.js",
       },
       exposes: {
-         "./store": "./src/redux/store.js"
+        "./store": "./src/redux/store.js",
       },
       shared: {
-        "react": {
+        react: {
           singleton: true,
-          requiredVersion: dependencies.react
+          requiredVersion: dependencies.react,
         },
         "react-dom": {
           singleton: true,
-          requiredVersion: dependencies["react-dom"]
+          requiredVersion: dependencies["react-dom"],
         },
-        "@mui/material": {
-          singleton: true,
-          requiredVersion: dependencies["@mui/material"]
-        },
-        "@mui/icons-material": {
-          singleton: true,
-          requiredVersion: dependencies["@mui/icons-material"]
-        },
-      }
+      },
     }),
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
