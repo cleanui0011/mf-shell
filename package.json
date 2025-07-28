@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build:dev": "webpack --mode development",
-    "build:prod": "webpack --mode production",
-    "start:prod": "node server.js",
-    "start:dev": "webpack serve --mode development"
+    "start:dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",

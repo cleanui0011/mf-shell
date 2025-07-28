@@ -4,7 +4,7 @@
 
 ```bash
 npm run build:dev
-npm start:prod
+npm start
 ```
 
 #### Start in watch mode
