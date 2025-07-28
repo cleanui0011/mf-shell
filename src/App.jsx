@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { BrowserRouter } from "react-router";
 import AppShell from "./AppShell";
-import { StoreProvider } from "./redux/store";
-import { useServiceWorker } from "./service-worker/useServiceWorker";
+import { StoreProvider } from 'Shell/store'
+import './App.scss';
 
 const App = () => {
   return (

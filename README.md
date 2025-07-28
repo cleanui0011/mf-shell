@@ -1,13 +1,14 @@
-### Getting Started
+### To run locally
 
-```bash
-npm install
-```
+#### Build and Start
 
 ```bash
 npm run build:dev
+npm start:prod
 ```
 
+#### Start in watch mode
+
 ```bash
-npm start
+npm run start:dev
 ```
